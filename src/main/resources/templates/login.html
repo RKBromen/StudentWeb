@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Example</title>
+</head>
+
+<body>
+
+    <div class="flex justify-center border">
+        <form class="flex flex-col justify-center border space-y-4" action="#" th:action="@{/login}"
+            th:object="${student}" method="post">
+            <div class="flex flex-row justify-center">
+                <h1>Tra cứu thí sinh</h1>
+            </div>
+            <div class="flex flex-row space-x-2 justify-center">
+                <label>Username: </label>
+                <input type="text" name="cccd" required>
+            </div>
+            <div class="flex flex-row space-x-2 justify-center">
+                <label>Password: </label>
+                <input type="text" name="birth" required>
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="border bg-red-400 hover:bg-red-600 w-10">Send</button>
+            </div>
+            <p th:if="${error}" th:text="${error}"></p>
+        </form>
+    </div>
+</body>
+
+</html>
