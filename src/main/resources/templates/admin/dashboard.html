@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Quản trị hệ thống</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1>Bảng điều khiển quản trị</h1>
+        <p>Tổng quan hệ thống tuyển sinh — Quản lý điểm ngưỡng và danh sách thí sinh.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-grid" style="margin-bottom: 32px;">
+        <div class="stat-card">
+            <div class="stat-label">Tổng thí sinh</div>
+            <div class="stat-value text-primary" th:text="${totalCandidates != null ? totalCandidates : '128'}">128</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Trúng tuyển</div>
+            <div class="stat-value text-success" th:text="${passedCount != null ? passedCount : '87'}">87</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Không trúng tuyển</div>
+            <div class="stat-value text-danger" th:text="${failedCount != null ? failedCount : '41'}">41</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Số ngành</div>
+            <div class="stat-value" th:text="${totalMajors != null ? totalMajors : '5'}">5</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <section class="grid-2" style="margin-bottom: 32px;">
+        <div class="feature-card">
+            <div class="feature-icon amber">N</div>
+            <h3>Quản lý điểm ngưỡng</h3>
+            <p>Điều chỉnh điểm ngưỡng xét tuyển cho từng ngành học trong hệ thống.</p>
+            <a th:href="@{/admin/threshold}" class="btn btn-primary btn-sm">Quản lý ngưỡng →</a>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon blue">D</div>
+            <h3>Danh sách thí sinh</h3>
+            <p>Xem toàn bộ danh sách thí sinh, trạng thái trúng tuyển và điểm xét tuyển.</p>
+            <a th:href="@{/admin/candidates}" class="btn btn-outline btn-sm">Xem danh sách →</a>
+        </div>
+    </section>
+
+    <!-- Recent activity -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Thông tin ngành học</h3>
+            <p>Tổng hợp nhanh điểm ngưỡng các ngành trong hệ thống.</p>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã ngành</th>
+                            <th>Tên ngành</th>
+                            <th>Điểm ngưỡng</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody th:if="${majors != null}">
+                        <tr th:each="major : ${majors}">
+                            <td th:text="${major.maNganh}">7480201</td>
+                            <td th:text="${major.tenNganh}">CNTT</td>
+                            <td><strong th:text="${major.diemNguong}">22.5</strong></td>
+                            <td><span class="badge badge-success">Đang tuyển</span></td>
+                        </tr>
+                    </tbody>
+                    <!-- Fallback demo data when backend not ready -->
+                    <tbody th:if="${majors == null}">
+                        <tr>
+                            <td>7480201</td>
+                            <td>Công nghệ thông tin</td>
+                            <td><strong>22.50</strong></td>
+                            <td><span class="badge badge-success">Đang tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>7310101</td>
+                            <td>Kinh tế</td>
+                            <td><strong>20.00</strong></td>
+                            <td><span class="badge badge-success">Đang tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>7220201</td>
+                            <td>Ngôn ngữ Anh</td>
+                            <td><strong>23.00</strong></td>
+                            <td><span class="badge badge-success">Đang tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>7340101</td>
+                            <td>Quản trị kinh doanh</td>
+                            <td><strong>21.00</strong></td>
+                            <td><span class="badge badge-success">Đang tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>7340115</td>
+                            <td>Marketing</td>
+                            <td><strong>21.50</strong></td>
+                            <td><span class="badge badge-success">Đang tuyển</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

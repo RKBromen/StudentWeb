@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hệ thống tra cứu kết quả tuyển sinh đại học">
+    <title layout:title-pattern="$CONTENT_TITLE - Cổng Tuyển Sinh">Cổng Tuyển Sinh</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logo.png}">
+</head>
+<body>
+
+    <!-- Header Fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <!-- Page Content -->
+    <main class="content">
+        <div class="container" layout:fragment="content">
+            <!-- Content will be injected here -->
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- JS -->
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/validation.js}"></script>
+
+    <!-- Page-specific scripts -->
+    <th:block layout:fragment="scripts"></th:block>
+</body>
+</html>
