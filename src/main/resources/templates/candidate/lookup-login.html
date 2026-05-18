@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Đăng nhập tra cứu</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="breadcrumb">
+        <a th:href="@{/}">Trang chủ</a>
+        <span>/</span>
+        <span>Đăng nhập tra cứu</span>
+    </div>
+
+    <div class="login-card card">
+        <div class="card-body">
+            <div class="login-header">
+                <div class="login-icon">TS</div>
+                <h2>Tra cứu kết quả tuyển sinh</h2>
+                <p>Nhập CCCD và ngày sinh để xem kết quả xét tuyển</p>
+            </div>
+
+            <!-- Error Alert -->
+            <div class="alert alert-danger" th:if="${error}" data-dismiss="8000">
+                <span th:text="${error}">Thông tin đăng nhập không đúng.</span>
+            </div>
+
+            <form id="loginForm" action="#" th:action="@{/candidate/login}" th:object="${student}" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="cccd">
+                        Số CCCD <span class="required">*</span>
+                    </label>
+                    <input id="cccd" type="text" name="cccd" required
+                           placeholder="Nhập số CCCD (VD: TS_0001)"
+                           class="form-input"
+                           th:value="${student != null ? student.cccd : ''}">
+                    <span class="form-hint">Nhập mã thí sinh hoặc số CCCD đã đăng ký.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="birth">
+                        Ngày sinh <span class="required">*</span>
+                    </label>
+                    <input id="birth" type="text" name="birth" required
+                           inputmode="numeric" pattern="\d{8}"
+                           placeholder="Ví dụ: 25072007"
+                           class="form-input"
+                           th:value="${student != null ? student.birth : ''}">
+                    <span class="form-hint">Nhập 8 chữ số liền theo định dạng ngày/tháng/năm (ddmmyyyy).</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg">
+                    Đăng nhập tra cứu
+                </button>
+            </form>
+
+            <div style="text-align:center; margin-top: 20px;">
+                <a th:href="@{/candidate/calc-dgnl}" class="btn btn-ghost btn-sm">
+                    Hoặc sử dụng công cụ tính điểm tham khảo →
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

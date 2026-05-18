@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Danh sách thí sinh</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="breadcrumb">
+        <a th:href="@{/admin/dashboard}">Quản trị</a>
+        <span>/</span>
+        <span>Danh sách thí sinh</span>
+    </div>
+
+    <div class="page-header">
+        <h1>Danh sách thí sinh</h1>
+        <p>Toàn bộ thí sinh trong hệ thống cùng trạng thái xét tuyển.</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="action-bar">
+        <div class="search-box">
+            <span class="search-icon">○</span>
+            <input type="text" id="searchInput" class="form-input" placeholder="Tìm kiếm theo CCCD hoặc họ tên..." style="padding-left: 38px;">
+        </div>
+        <div>
+            <a th:href="@{/admin/dashboard}" class="btn btn-ghost btn-sm">← Quay lại</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body" style="padding: 0;">
+            <div class="table-wrapper">
+                <table id="candidateTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>CCCD</th>
+                            <th>Họ tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Ngành NV1</th>
+                            <th>Phương thức</th>
+                            <th>Tổng điểm</th>
+                            <th>Kết quả</th>
+                        </tr>
+                    </thead>
+                    <tbody th:if="${candidates != null}">
+                        <tr th:each="cand, stat : ${candidates}">
+                            <td th:text="${stat.index + 1}">1</td>
+                            <td th:text="${cand.cccd}">TS_0001</td>
+                            <td th:text="${cand.hoTen}">Nguyễn Văn A</td>
+                            <td th:text="${cand.birth}">25072007</td>
+                            <td th:text="${cand.majorName}">CNTT</td>
+                            <td th:text="${cand.method}">ĐGNL</td>
+                            <td><strong th:text="${cand.totalScore}">25.50</strong></td>
+                            <td>
+                                <span class="badge badge-success"
+                                      th:if="${cand.status == 'Trúng tuyển'}">Trúng tuyển</span>
+                                <span class="badge badge-danger"
+                                      th:if="${cand.status != 'Trúng tuyển'}"
+                                      th:text="${cand.status}">Không TT</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <!-- Fallback demo data -->
+                    <tbody th:if="${candidates == null}" id="demoBody">
+                        <tr>
+                            <td>1</td><td>TS_0001</td><td>Nguyễn Văn An</td><td>25072007</td>
+                            <td>Công nghệ thông tin</td><td>ĐGNL</td><td><strong>25.50</strong></td>
+                            <td><span class="badge badge-success">Trúng tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td><td>TS_0002</td><td>Trần Thị Bích</td><td>15031007</td>
+                            <td>Kinh tế</td><td>THPT</td><td><strong>22.75</strong></td>
+                            <td><span class="badge badge-success">Trúng tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>3</td><td>TS_0003</td><td>Lê Hoàng Cường</td><td>01012007</td>
+                            <td>Ngôn ngữ Anh</td><td>VSAT</td><td><strong>19.20</strong></td>
+                            <td><span class="badge badge-danger">Không trúng tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>4</td><td>TS_0004</td><td>Phạm Minh Đức</td><td>02082007</td>
+                            <td>QTKD</td><td>ĐGNL</td><td><strong>24.00</strong></td>
+                            <td><span class="badge badge-success">Trúng tuyển</span></td>
+                        </tr>
+                        <tr>
+                            <td>5</td><td>TS_0005</td><td>Võ Ngọc Hà</td><td>20062007</td>
+                            <td>Marketing</td><td>THPT</td><td><strong>20.50</strong></td>
+                            <td><span class="badge badge-danger">Không trúng tuyển</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="scripts">
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const table = document.getElementById('candidateTable');
+    if (!searchInput || !table) return;
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(query) ? '' : 'none';
+        });
+    });
+});
+</script>
+</th:block>
+</body>
+</html>

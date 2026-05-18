@@ -1,64 +1,65 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Tra cứu tuyển sinh</title>
+    <title>Trang chủ</title>
 </head>
+<body>
+<div layout:fragment="content">
 
-<body class="min-h-screen bg-slate-50 text-slate-800">
-    <header class="border-b bg-white">
-        <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-            <div>
-                <h1 class="text-xl font-semibold">Cổng tra cứu tuyển sinh</h1>
-                <p class="text-sm text-slate-500">Xem kết quả trúng tuyển và chi tiết điểm xét tuyển.</p>
-            </div>
-            <a href="/login"
-                class="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700">
-                Tra cứu ngay
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">Năm học 2026 — Kết quả đã công bố</div>
+        <h1>Cổng Tra Cứu <span>Tuyển Sinh</span></h1>
+        <p>Xem kết quả trúng tuyển, chi tiết điểm xét tuyển và công cụ tham khảo tính điểm ĐGNL / VSAT.</p>
+        <div class="hero-actions">
+            <a th:href="@{/candidate/login}" class="btn btn-primary btn-lg">
+                Tra cứu kết quả
+            </a>
+            <a th:href="@{/candidate/calc-dgnl}" class="btn btn-outline btn-lg">
+                Tính điểm tham khảo
             </a>
         </div>
-    </header>
+    </section>
 
-    <main class="mx-auto w-full max-w-5xl px-6 py-10">
-        <section class="grid gap-6 md:grid-cols-2">
-            <div class="rounded-2xl border bg-white p-6 shadow-sm">
-                <h2 class="text-lg font-semibold">Tra cứu kết quả tuyển sinh</h2>
-                <p class="mt-2 text-sm text-slate-600">
-                    Đăng nhập bằng CCCD và ngày sinh để xem kết quả trúng tuyển/trượt theo từng nguyện vọng.
-                </p>
-                <div class="mt-6">
-                    <a href="/login?mode=login"
-                        class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
-                        Đi đến đăng nhập
-                    </a>
-                </div>
-            </div>
-            <div class="rounded-2xl border bg-white p-6 shadow-sm">
-                <h2 class="text-lg font-semibold">Tra cứu chi tiết điểm xét tuyển</h2>
-                <p class="mt-2 text-sm text-slate-600">
-                    Nhập CCCD để xem điểm xét tuyển theo phương thức, tổ hợp môn và từng nguyện vọng.
-                </p>
-                <div class="mt-6">
-                    <a href="/login?mode=lookup"
-                        class="inline-flex items-center rounded-lg border border-blue-600 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50">
-                        Tra cứu điểm
-                    </a>
-                </div>
-            </div>
-        </section>
+    <!-- Feature Cards -->
+    <section class="grid-2" style="margin-top: 32px;">
+        <div class="feature-card animate-slide-up">
+            <div class="feature-icon blue">T</div>
+            <h3>Tra cứu kết quả tuyển sinh</h3>
+            <p>Đăng nhập bằng CCCD và ngày sinh để xem kết quả trúng tuyển / không trúng tuyển theo từng nguyện vọng.</p>
+            <a th:href="@{/candidate/login}" class="btn btn-primary btn-sm">Đăng nhập tra cứu</a>
+        </div>
+        <div class="feature-card animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="feature-icon green">Đ</div>
+            <h3>Công cụ tính điểm tham khảo</h3>
+            <p>Tính điểm quy đổi ĐGNL (thang 1200 → 30) hoặc điểm tổ hợp VSAT / THPT để tham khảo trước khi xét tuyển.</p>
+            <a th:href="@{/candidate/calc-dgnl}" class="btn btn-outline btn-sm">Tính điểm ĐGNL</a>
+        </div>
+    </section>
 
-        <section class="mt-10 rounded-2xl border bg-white p-6 shadow-sm">
-            <h3 class="text-base font-semibold">Hướng dẫn nhanh</h3>
-            <ul class="mt-3 space-y-2 text-sm text-slate-600">
-                <li>1. Chuẩn bị CCCD và ngày sinh (định dạng ngày/tháng/năm).</li>
-                <li>2. Đăng nhập để xem trạng thái trúng tuyển/trượt theo từng nguyện vọng.</li>
-                <li>3. Chuyển sang phần tra cứu chi tiết để xem bảng điểm xét tuyển.</li>
-            </ul>
-        </section>
-    </main>
+    <!-- Quick Guide -->
+    <section class="card" style="margin-top: 32px;">
+        <div class="card-header">
+            <h3>Hướng dẫn nhanh</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">Bước 1</span>
+                <span class="info-value">Chuẩn bị số CCCD và ngày sinh (định dạng ddmmyyyy, ví dụ: 25072007).</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Bước 2</span>
+                <span class="info-value">Đăng nhập tại trang Tra cứu để xem trạng thái Trúng tuyển / Không trúng tuyển.</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Bước 3</span>
+                <span class="info-value">Sử dụng công cụ Tính điểm ĐGNL hoặc VSAT để tham khảo cách tính điểm xét tuyển.</span>
+            </div>
+        </div>
+    </section>
+
+</div>
 </body>
-
 </html>

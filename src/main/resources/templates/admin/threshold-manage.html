@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Quản lý điểm ngưỡng</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="breadcrumb">
+        <a th:href="@{/admin/dashboard}">Quản trị</a>
+        <span>/</span>
+        <span>Điểm ngưỡng</span>
+    </div>
+
+    <div class="page-header">
+        <h1>Quản lý điểm ngưỡng xét tuyển</h1>
+        <p>Điều chỉnh điểm ngưỡng cho từng ngành. Thay đổi sẽ ảnh hưởng đến kết quả xét tuyển.</p>
+    </div>
+
+    <!-- Alert -->
+    <div class="alert alert-success" th:if="${success}" data-dismiss="5000">
+        <span th:text="${success}">Cập nhật điểm ngưỡng thành công!</span>
+    </div>
+
+    <div class="card">
+        <div class="card-header" style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+                <h3>Bảng điểm ngưỡng các ngành</h3>
+                <p>Nhập điểm ngưỡng mới và nhấn Lưu để cập nhật.</p>
+            </div>
+            <button type="submit" form="thresholdForm" class="btn btn-success btn-sm">Lưu thay đổi</button>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <form id="thresholdForm" th:action="@{/admin/threshold}" method="post">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã ngành</th>
+                                <th>Tên ngành</th>
+                                <th>Điểm ngưỡng hiện tại</th>
+                                <th>Điểm ngưỡng mới</th>
+                            </tr>
+                        </thead>
+                        <tbody th:if="${majors != null}">
+                            <tr th:each="major, stat : ${majors}">
+                                <td th:text="${major.maNganh}">7480201</td>
+                                <td th:text="${major.tenNganh}">CNTT</td>
+                                <td>
+                                    <span class="badge badge-info" th:text="${major.diemNguong}">22.50</span>
+                                </td>
+                                <td>
+                                    <input type="hidden" th:name="'ids[' + ${stat.index} + ']'" th:value="${major.id}">
+                                    <input type="number" class="threshold-input" step="0.01" min="0" max="30"
+                                           th:name="'thresholds[' + ${stat.index} + ']'"
+                                           th:value="${major.diemNguong}"
+                                           placeholder="0.00">
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!-- Fallback demo -->
+                        <tbody th:if="${majors == null}">
+                            <tr>
+                                <td>7480201</td><td>Công nghệ thông tin</td>
+                                <td><span class="badge badge-info">22.50</span></td>
+                                <td><input type="number" class="threshold-input" step="0.01" min="0" max="30" value="22.50"></td>
+                            </tr>
+                            <tr>
+                                <td>7310101</td><td>Kinh tế</td>
+                                <td><span class="badge badge-info">20.00</span></td>
+                                <td><input type="number" class="threshold-input" step="0.01" min="0" max="30" value="20.00"></td>
+                            </tr>
+                            <tr>
+                                <td>7220201</td><td>Ngôn ngữ Anh</td>
+                                <td><span class="badge badge-info">23.00</span></td>
+                                <td><input type="number" class="threshold-input" step="0.01" min="0" max="30" value="23.00"></td>
+                            </tr>
+                            <tr>
+                                <td>7340101</td><td>Quản trị kinh doanh</td>
+                                <td><span class="badge badge-info">21.00</span></td>
+                                <td><input type="number" class="threshold-input" step="0.01" min="0" max="30" value="21.00"></td>
+                            </tr>
+                            <tr>
+                                <td>7340115</td><td>Marketing</td>
+                                <td><span class="badge badge-info">21.50</span></td>
+                                <td><input type="number" class="threshold-input" step="0.01" min="0" max="30" value="21.50"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer" style="text-align: right;">
+            <a th:href="@{/admin/dashboard}" class="btn btn-ghost btn-sm">← Quay lại</a>
+            <button type="submit" form="thresholdForm" class="btn btn-success btn-sm">Lưu thay đổi</button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

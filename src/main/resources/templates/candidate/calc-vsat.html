@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Tính điểm VSAT / THPT</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="breadcrumb">
+        <a th:href="@{/}">Trang chủ</a>
+        <span>/</span>
+        <span>Tính điểm VSAT / THPT</span>
+    </div>
+
+    <div class="page-header">
+        <h1>Công cụ tính điểm VSAT / THPT</h1>
+        <p>Tính điểm tổ hợp 3 môn theo thang VSAT (150) hoặc THPT (10), bao gồm ưu tiên và điểm cộng.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Nhập thông tin điểm VSAT / THPT</h3>
+            <p>Chọn thang điểm và nhập điểm từng môn trong tổ hợp.</p>
+        </div>
+        <div class="card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="vsatScale">Thang điểm</label>
+                    <select id="vsatScale" class="form-select">
+                        <option value="10">THPT (thang 10)</option>
+                        <option value="150">VSAT (thang 150)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatMajor">Ngành xét tuyển</label>
+                    <select id="vsatMajor" class="form-select">
+                        <option>Công nghệ thông tin</option>
+                        <option>Kinh tế</option>
+                        <option>Marketing</option>
+                        <option>Ngôn ngữ Anh</option>
+                        <option>Quản trị kinh doanh</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatCombo">Tổ hợp môn</label>
+                    <select id="vsatCombo" class="form-select">
+                        <option>A00 (Toán – Lý – Hóa)</option>
+                        <option>A01 (Toán – Lý – Anh)</option>
+                        <option>D01 (Toán – Văn – Anh)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatSubject1">Điểm môn 1 <span class="required">*</span></label>
+                    <input id="vsatSubject1" type="number" min="0" step="0.01"
+                           placeholder="Ví dụ: 8.5 hoặc 120" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatSubject2">Điểm môn 2 <span class="required">*</span></label>
+                    <input id="vsatSubject2" type="number" min="0" step="0.01"
+                           placeholder="Ví dụ: 7.0 hoặc 110" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatSubject3">Điểm môn 3 <span class="required">*</span></label>
+                    <input id="vsatSubject3" type="number" min="0" step="0.01"
+                           placeholder="Ví dụ: 8.0 hoặc 130" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatEnglishConverted">Điểm tiếng Anh quy đổi (nếu có)</label>
+                    <input id="vsatEnglishConverted" type="number" min="0" step="0.01"
+                           placeholder="VD: IELTS 6.5 → 8.5" class="form-input">
+                    <span class="form-hint">Nếu có chứng chỉ tiếng Anh quốc tế, nhập điểm đã quy đổi thay cho môn 3.</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatPriority">Đối tượng ưu tiên</label>
+                    <select id="vsatPriority" class="form-select">
+                        <option value="0">Không ưu tiên</option>
+                        <option value="1">Ưu tiên 1 (+1.0 điểm)</option>
+                        <option value="2">Ưu tiên 2 (+2.0 điểm)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatArea">Khu vực ưu tiên</label>
+                    <select id="vsatArea" class="form-select">
+                        <option value="0">KV3 (0 điểm)</option>
+                        <option value="0.25">KV2-NT (+0.25 điểm)</option>
+                        <option value="0.5">KV2 (+0.5 điểm)</option>
+                        <option value="0.75">KV1 (+0.75 điểm)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="vsatBonus">Điểm cộng khác</label>
+                    <input id="vsatBonus" type="number" min="0" step="0.01" placeholder="0" class="form-input">
+                </div>
+            </div>
+
+            <!-- Result Box -->
+            <div class="result-box" style="margin-top: 24px;">
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label">Tổng điểm 3 môn (thang 10)</div>
+                        <div class="result-value primary" id="vsatConverted">0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Tổng điểm xét tuyển</div>
+                        <div class="result-value" id="vsatTotal">0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Trạng thái</div>
+                        <div class="result-value" id="vsatStatus">---</div>
+                    </div>
+                </div>
+                <p class="result-note">* VSAT thang 150: quy đổi mỗi môn = (điểm / 150) × 10. THPT: giữ nguyên. Tổng = 3 môn + Ưu tiên + KV + Cộng.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick link -->
+    <div style="text-align: center; margin-top: 24px;">
+        <a th:href="@{/candidate/calc-dgnl}" class="btn btn-outline btn-sm">← Chuyển sang tính điểm ĐGNL</a>
+        <a th:href="@{/candidate/login}" class="btn btn-ghost btn-sm">Tra cứu kết quả</a>
+    </div>
+
+</div>
+
+<th:block layout:fragment="scripts">
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toNum = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
+
+    const update = () => {
+        const scale = toNum(document.getElementById('vsatScale').value);
+        const s1 = toNum(document.getElementById('vsatSubject1').value);
+        const s2 = toNum(document.getElementById('vsatSubject2').value);
+        const s3 = toNum(document.getElementById('vsatSubject3').value);
+        const engConverted = toNum(document.getElementById('vsatEnglishConverted').value);
+        const priority = toNum(document.getElementById('vsatPriority').value);
+        const area = toNum(document.getElementById('vsatArea').value);
+        const bonus = toNum(document.getElementById('vsatBonus').value);
+
+        const factor = scale === 150 ? 10 / 150 : 1;
+        const c1 = s1 * factor;
+        const c2 = s2 * factor;
+        const rawThird = engConverted > 0 ? engConverted : s3;
+        const c3 = rawThird * (engConverted > 0 ? 1 : factor);
+
+        const subTotal = c1 + c2 + c3;
+        const total = subTotal + priority + area + bonus;
+
+        document.getElementById('vsatConverted').textContent = subTotal.toFixed(2);
+        document.getElementById('vsatTotal').textContent = total.toFixed(2);
+
+        const statusEl = document.getElementById('vsatStatus');
+        if (total > 0) {
+            statusEl.textContent = 'Đã tính ✓';
+            statusEl.className = 'result-value success';
+        } else {
+            statusEl.textContent = '---';
+            statusEl.className = 'result-value';
+        }
+    };
+
+    ['vsatScale','vsatSubject1','vsatSubject2','vsatSubject3','vsatEnglishConverted','vsatPriority','vsatArea','vsatBonus'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', update);
+    });
+    update();
+});
+</script>
+</th:block>
+</body>
+</html>

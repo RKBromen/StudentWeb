@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Tính điểm ĐGNL</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="breadcrumb">
+        <a th:href="@{/}">Trang chủ</a>
+        <span>/</span>
+        <span>Tính điểm ĐGNL</span>
+    </div>
+
+    <div class="page-header">
+        <h1>Công cụ tính điểm ĐGNL</h1>
+        <p>Quy đổi điểm Đánh giá Năng lực (thang 1200) về thang 30 và tính tổng điểm xét tuyển.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" data-tabs="#calcPanels">
+        <button class="tab-btn active" data-target="panel-dgnl">Phương thức ĐGNL</button>
+        <button class="tab-btn" data-target="panel-info">Hướng dẫn công thức</button>
+    </div>
+
+    <div id="calcPanels">
+        <!-- Panel ĐGNL Calculator -->
+        <div id="panel-dgnl" class="tab-panel active">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Nhập thông tin điểm ĐGNL</h3>
+                    <p>Điểm thi ĐGNL từ 0 đến 1200. Hệ thống tự quy đổi về thang 30.</p>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlScore">Điểm thi ĐGNL (0–1200) <span class="required">*</span></label>
+                            <input id="dgnlScore" type="number" min="0" max="1200" step="0.01"
+                                   placeholder="Ví dụ: 850" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlMajor">Ngành xét tuyển</label>
+                            <select id="dgnlMajor" class="form-select">
+                                <option value="cntt">Công nghệ thông tin</option>
+                                <option value="kinhteo">Kinh tế</option>
+                                <option value="nna">Ngôn ngữ Anh</option>
+                                <option value="qtkd">Quản trị kinh doanh</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlCombo">Tổ hợp gốc</label>
+                            <select id="dgnlCombo" class="form-select">
+                                <option>A00 (Toán – Lý – Hóa)</option>
+                                <option>A01 (Toán – Lý – Anh)</option>
+                                <option>D01 (Toán – Văn – Anh)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlPriority">Đối tượng ưu tiên</label>
+                            <select id="dgnlPriority" class="form-select">
+                                <option value="0">Không ưu tiên</option>
+                                <option value="1">Ưu tiên 1 (+1.0 điểm)</option>
+                                <option value="2">Ưu tiên 2 (+2.0 điểm)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlArea">Khu vực ưu tiên</label>
+                            <select id="dgnlArea" class="form-select">
+                                <option value="0">KV3 (0 điểm)</option>
+                                <option value="0.25">KV2-NT (+0.25 điểm)</option>
+                                <option value="0.5">KV2 (+0.5 điểm)</option>
+                                <option value="0.75">KV1 (+0.75 điểm)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlBonus">Điểm cộng khác</label>
+                            <input id="dgnlBonus" type="number" min="0" step="0.01" placeholder="0"
+                                   class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlThreshold">Điểm ngưỡng ngành</label>
+                            <input id="dgnlThreshold" type="number" min="0" step="0.01" placeholder="Ví dụ: 20"
+                                   class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dgnlCutoff">Điểm trúng tuyển (nếu có)</label>
+                            <input id="dgnlCutoff" type="number" min="0" step="0.01" placeholder="Ví dụ: 24"
+                                   class="form-input">
+                        </div>
+                    </div>
+
+                    <!-- Result Box -->
+                    <div class="result-box" style="margin-top: 24px;">
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <div class="result-label">Điểm quy đổi thang 30</div>
+                                <div class="result-value primary" id="dgnlConverted">0.00</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Tổng điểm xét tuyển</div>
+                                <div class="result-value" id="dgnlTotal">0.00</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Kết quả</div>
+                                <div class="result-value" id="dgnlStatus">---</div>
+                            </div>
+                        </div>
+                        <p class="result-note">* Công thức: Điểm quy đổi = (Điểm ĐGNL / 1200) × 30. Tổng = Quy đổi + Ưu tiên + KV + Cộng.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Info -->
+        <div id="panel-info" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Hướng dẫn công thức tính điểm ĐGNL</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Điểm ĐGNL (Đánh giá Năng lực) được quy đổi từ thang 1200 về thang 30 để so sánh với điểm chuẩn ngành.
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Công thức quy đổi</span>
+                        <span class="info-value">Điểm thang 30 = (Điểm ĐGNL / 1200) × 30</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tổng điểm</span>
+                        <span class="info-value">Tổng = Quy đổi + Ưu tiên đối tượng + Ưu tiên khu vực + Điểm cộng</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Ưu tiên đối tượng</span>
+                        <span class="info-value">ƯT1: +1.0 điểm | ƯT2: +2.0 điểm</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Ưu tiên khu vực</span>
+                        <span class="info-value">KV1: +0.75 | KV2: +0.5 | KV2-NT: +0.25 | KV3: 0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Đạt ngưỡng</span>
+                        <span class="info-value">Tổng điểm ≥ Điểm ngưỡng ngành → Đạt</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Trúng tuyển</span>
+                        <span class="info-value">Tổng điểm ≥ Điểm trúng tuyển → Trúng tuyển</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="scripts">
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toNum = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
+
+    const update = () => {
+        const score = toNum(document.getElementById('dgnlScore').value);
+        const priority = toNum(document.getElementById('dgnlPriority').value);
+        const area = toNum(document.getElementById('dgnlArea').value);
+        const bonus = toNum(document.getElementById('dgnlBonus').value);
+        const threshold = toNum(document.getElementById('dgnlThreshold').value);
+        const cutoff = toNum(document.getElementById('dgnlCutoff').value);
+
+        const converted = (score / 1200) * 30;
+        const total = converted + priority + area + bonus;
+
+        document.getElementById('dgnlConverted').textContent = converted.toFixed(2);
+        document.getElementById('dgnlTotal').textContent = total.toFixed(2);
+
+        const statusEl = document.getElementById('dgnlStatus');
+        let status = 'Chưa xác định';
+        statusEl.className = 'result-value';
+
+        if (threshold > 0) {
+            if (total >= threshold) {
+                status = 'Đạt ngưỡng ✓';
+                statusEl.classList.add('success');
+            } else {
+                status = 'Không đạt ngưỡng ✗';
+                statusEl.classList.add('danger');
+            }
+        }
+        if (cutoff > 0) {
+            if (total >= cutoff) {
+                status = 'Trúng tuyển';
+                statusEl.classList.add('success');
+            } else {
+                status = 'Không trúng tuyển';
+                statusEl.classList.add('danger');
+            }
+        }
+        statusEl.textContent = status;
+    };
+
+    ['dgnlScore','dgnlPriority','dgnlArea','dgnlBonus','dgnlThreshold','dgnlCutoff'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', update);
+    });
+    update();
+});
+</script>
+</th:block>
+</body>
+</html>

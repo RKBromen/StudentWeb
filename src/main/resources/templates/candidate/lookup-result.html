@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Kết quả tuyển sinh</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="breadcrumb">
+        <a th:href="@{/}">Trang chủ</a>
+        <span>/</span>
+        <a th:href="@{/candidate/login}">Tra cứu</a>
+        <span>/</span>
+        <span>Kết quả</span>
+    </div>
+
+    <div class="page-header">
+        <h1>Kết quả tuyển sinh</h1>
+        <p>Trạng thái trúng tuyển và chi tiết điểm xét tuyển theo từng nguyện vọng.</p>
+    </div>
+
+    <!-- Student Info Card -->
+    <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+            <h3>Thông tin thí sinh</h3>
+        </div>
+        <div class="card-body">
+            <div th:if="${student != null}" class="form-grid">
+                <div class="info-row">
+                    <span class="info-label">CCCD</span>
+                    <span class="info-value" th:text="${student.cccd}">---</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ngày sinh</span>
+                    <span class="info-value" th:text="${student.birth}">---</span>
+                </div>
+                <div class="info-row" th:if="${student.hoTen != null}">
+                    <span class="info-label">Họ tên</span>
+                    <span class="info-value" th:text="${student.hoTen}">---</span>
+                </div>
+            </div>
+            <div th:if="${student == null}" class="empty-state">
+                <div class="empty-icon">—</div>
+                <h3>Không tìm thấy thí sinh</h3>
+                <p>Vui lòng <a th:href="@{/candidate/login}">đăng nhập lại</a> để xem kết quả.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admission Results Table -->
+    <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header" style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+                <h3>Kết quả trúng tuyển theo nguyện vọng</h3>
+                <p>So sánh điểm xét tuyển với điểm chuẩn của từng ngành.</p>
+            </div>
+            <span class="badge badge-success" th:if="${statusSummary}" th:text="${statusSummary}">Cập nhật</span>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-wrapper" th:if="${admissionResults != null and !admissionResults.isEmpty()}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nguyện vọng</th>
+                            <th>Ngành</th>
+                            <th>Phương thức</th>
+                            <th>Tổ hợp</th>
+                            <th>Điểm xét</th>
+                            <th>Điểm chuẩn</th>
+                            <th>Kết quả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${admissionResults}">
+                            <td th:text="${item.preference}">NV1</td>
+                            <td th:text="${item.major}">CNTT</td>
+                            <td th:text="${item.method}">ĐGNL</td>
+                            <td th:text="${item.combo}">A01</td>
+                            <td><strong th:text="${item.score}">26.50</strong></td>
+                            <td th:text="${item.cutoff}">24.00</td>
+                            <td>
+                                <span class="badge badge-success"
+                                      th:if="${item.status == 'Trúng tuyển'}"
+                                      th:text="${item.status}">Trúng tuyển</span>
+                                <span class="badge badge-danger"
+                                      th:if="${item.status != 'Trúng tuyển'}"
+                                      th:text="${item.status}">Không trúng tuyển</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${admissionResults == null or admissionResults.isEmpty()}" class="empty-state">
+                <div class="empty-icon">—</div>
+                <h3>Chưa có dữ liệu kết quả</h3>
+                <p>Vui lòng kiểm tra lại thông tin đăng nhập hoặc liên hệ phòng tuyển sinh.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Details Table -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Chi tiết điểm xét tuyển</h3>
+            <p>Bảng điểm theo phương thức và tổ hợp môn ứng với từng nguyện vọng.</p>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-wrapper" th:if="${scoreDetails != null and !scoreDetails.isEmpty()}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nguyện vọng</th>
+                            <th>Phương thức</th>
+                            <th>Tổ hợp môn</th>
+                            <th>Điểm từng môn</th>
+                            <th>Điểm cộng</th>
+                            <th>Tổng điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="detail : ${scoreDetails}">
+                            <td th:text="${detail.preference}">NV1</td>
+                            <td th:text="${detail.method}">THPT</td>
+                            <td th:text="${detail.combo}">D01</td>
+                            <td th:text="${detail.subjectScores}">Toán 8.5, Văn 8.0, Anh 7.5</td>
+                            <td th:text="${detail.bonus}">0.5</td>
+                            <td><strong th:text="${detail.total}">24.5</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${scoreDetails == null or scoreDetails.isEmpty()}" class="empty-state">
+                <div class="empty-icon">—</div>
+                <h3>Chưa có dữ liệu điểm chi tiết</h3>
+                <p>Hãy sử dụng <a th:href="@{/candidate/calc-dgnl}">công cụ tính điểm</a> để tham khảo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="text-align: center; margin-top: 32px;">
+        <a th:href="@{/candidate/login}" class="btn btn-outline">← Quay lại đăng nhập</a>
+        <a th:href="@{/}" class="btn btn-ghost">Về trang chủ</a>
+    </div>
+
+</div>
+</body>
+</html>
